@@ -24,16 +24,18 @@ def start_stream():
         print("🎧 Starting 11-hour stream")
         command = [
             "ffmpeg",
-            "-stream_loop", "-1", "-i", "music.mp3",
-            "-loop", "1", "-framerate", "1", "-i", "stream.jpg",
-            "-re",
-            "-filter_complex", "[1:v]format=yuv420p[v]",
+            "-re",  # must come BEFORE the music input
+            "-stream_loop", "-1", "-i", "music.mp3",  # Input 0: audio
+            "-loop", "1", "-framerate", "1", "-i", "stream.jpg",  # Input 1: image
+            "-filter_complex", "[1:v]format=yuv420p[v]",  # format fix
+            # output video from image, audio from mp3
             "-map", "[v]", "-map", "0:a",
             "-s", "1280x720",
             "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",
             "-b:v", "3000k", "-g", "8", "-keyint_min", "8",
             "-c:a", "aac", "-b:a", "192k",
-            "-shortest", "-f", "flv",
+            "-shortest",  # stop when the audio ends
+            "-f", "flv",
             f"{STREAM_URL}/{STREAM_KEY}"
         ]
 
