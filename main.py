@@ -24,18 +24,22 @@ def start_stream():
         print("🎧 Starting 11-hour stream")
         command = [
             "ffmpeg",
-            "-re",  # must come BEFORE the music input
-            "-stream_loop", "-1", "-i", "music.mp3",  # Input 0: audio
-            "-loop", "1", "-framerate", "1", "-i", "stream.jpg",  # Input 1: image
-            "-filter_complex", "[1:v]format=yuv420p[v]",  # format fix
-            # output video from image, audio from mp3
+            "-stream_loop", "-1", "-i", "music.mp3",                 # Audio input loop
+            # Video input loop (image), 30fps
+            "-loop", "1", "-framerate", "30", "-i", "stream.jpg",
+            # Ensure format
+            "-filter_complex", "[1:v]format=yuv420p[v]",
+            # Map video and audio
             "-map", "[v]", "-map", "0:a",
-            "-s", "1280x720",
-            "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",
-            "-b:v", "3000k", "-g", "8", "-keyint_min", "8",
-            "-c:a", "aac", "-b:a", "192k",
-            "-shortest",  # stop when the audio ends
-            "-f", "flv",
+            "-s", "1280x720",                                        # Resolution
+            "-r", "30",                                              # Force 30 fps
+            "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",  # Encoding settings
+            "-b:v", "3000k",                                         # Video bitrate
+            # Keyframe every 2 sec (30 fps * 2 = 60)
+            "-g", "60", "-keyint_min", "60",
+            "-c:a", "aac", "-b:a", "192k",                           # Audio settings
+            "-shortest",                                            # Ends with music
+            "-f", "flv",                                             # FLV for YouTube RTMP
             f"{STREAM_URL}/{STREAM_KEY}"
         ]
 
