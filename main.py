@@ -18,10 +18,11 @@ def run_flask():
 
 def start_stream():
     while True:
+        print("🎧 Starting 11-hour stream")
         command = [
             "ffmpeg",
             "-re",
-            "-stream_loop", "-1", "-t", "39600",  # 11 hours
+            "-stream_loop", "-1", "-t", "39600",
             "-i", "music.mp3",
             "-loop", "1", "-framerate", "2", "-i", "stream.jpg",
             "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",
@@ -34,6 +35,7 @@ def start_stream():
 
         process = subprocess.Popen(command)
         process.wait()
+        print("🔁 Stream ended/crashed. Restarting in 5s...")
         time.sleep(5)
 
 if __name__ == "__main__":
