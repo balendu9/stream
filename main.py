@@ -25,7 +25,7 @@ def start_stream():
         command = [
             "ffmpeg",
             "-stream_loop", "-1", "-i", "music.mp3",
-            "-loop", "1", "-framerate", "1", "-i", "stream.jpg",  # 1 FPS
+            "-loop", "1", "-framerate", "1", "-i", "image.jpg",  # 1 FPS
             "-filter_complex", "[1:v]format=yuv420p[v]",
             "-map", "[v]", "-map", "0:a",
             "-s", "640x360",
