@@ -25,17 +25,16 @@ def start_stream():
         command = [
             "ffmpeg",
             "-stream_loop", "-1", "-i", "music.mp3",
-            "-loop", "1", "-framerate", "30", "-i", "image.jpg",
+            "-loop", "1", "-framerate", "1", "-i", "stream.jpg",  # 1 FPS
             "-filter_complex", "[1:v]format=yuv420p[v]",
             "-map", "[v]", "-map", "0:a",
-            "-s", "640x360",                    
-            "-r", "30",                         
-            "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",
-            "-b:v", "800k",                     
-            "-maxrate", "1000k",                 
-            "-bufsize", "2000k",                 
-            "-g", "60", "-keyint_min", "60",     
-            "-c:a", "aac", "-b:a", "128k",       
+            "-s", "640x360",
+            "-r", "1",  # Output also 1 FPS to match
+            "-c:v", "libx264", "-preset", "ultrafast", "-tune", "stillimage",
+            "-b:v", "300k", "-maxrate", "500k", "-bufsize", "1000k",  # Very low bitrate
+            # Keyframe every 2 frames (2 sec at 1 FPS)
+            "-g", "2", "-keyint_min", "2",
+            "-c:a", "aac", "-b:a", "96k",
             "-shortest",
             "-f", "flv",
             f"{STREAM_URL}/{STREAM_KEY}"
