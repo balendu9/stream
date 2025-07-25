@@ -24,22 +24,20 @@ def start_stream():
         print("🎧 Starting 11-hour stream")
         command = [
             "ffmpeg",
-            "-stream_loop", "-1", "-i", "music.mp3",                 # Audio input loop
-            # Video input loop (image), 30fps
-            "-loop", "1", "-framerate", "30", "-i", "stream.jpg",
-            # Ensure format
+            "-stream_loop", "-1", "-i", "music.mp3",
+            "-loop", "1", "-framerate", "30", "-i", "image.jpg",
             "-filter_complex", "[1:v]format=yuv420p[v]",
-            # Map video and audio
             "-map", "[v]", "-map", "0:a",
-            "-s", "1280x720",                                        # Resolution
-            "-r", "30",                                              # Force 30 fps
-            "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",  # Encoding settings
-            "-b:v", "3000k",                                         # Video bitrate
-            # Keyframe every 2 sec (30 fps * 2 = 60)
-            "-g", "60", "-keyint_min", "60",
-            "-c:a", "aac", "-b:a", "192k",                           # Audio settings
-            "-shortest",                                            # Ends with music
-            "-f", "flv",                                             # FLV for YouTube RTMP
+            "-s", "640x360",                    
+            "-r", "30",                         
+            "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage",
+            "-b:v", "800k",                     
+            "-maxrate", "1000k",                 
+            "-bufsize", "2000k",                 
+            "-g", "60", "-keyint_min", "60",     
+            "-c:a", "aac", "-b:a", "128k",       
+            "-shortest",
+            "-f", "flv",
             f"{STREAM_URL}/{STREAM_KEY}"
         ]
 
